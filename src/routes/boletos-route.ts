@@ -9,3 +9,5 @@ const upload = multer({ dest: 'uploads/' });
 const boletosRouter = Router();
 
 boletosRouter.post("/", upload.single('file'), validarArquivo, postBoletos);
+
+export { boletosRouter }

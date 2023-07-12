@@ -1,1 +1,1 @@
-export * from "./boletos";
+export * from "./boletos-route";

@@ -15,8 +15,7 @@ app.use((0, cors_1.default)())
     .get("/health", (req, res) => {
     res.send("Hello World!");
 })
-    .use("/boletos", routes_1.boletosRoute)
-    .use("/lotes", routes_1.lotesRoutes);
+    .use("/boletos", routes_1.boletosRouter);
 function init() {
     (0, config_1.connectDb)();
     return Promise.resolve(app);
