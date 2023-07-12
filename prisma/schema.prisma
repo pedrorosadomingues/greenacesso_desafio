@@ -13,6 +13,8 @@ model Lote {
     ativo     Boolean?
     criado_em DateTime? @default(now())
     boletos   Boleto[]
+
+    @@map("lotes")
 }
 
 model Boleto {
@@ -24,4 +26,6 @@ model Boleto {
     ativo           Boolean?
     criado_em       DateTime? @default(now())
     lote            Lote    @relation(fields: [id_lote], references: [id])
+
+    @@map("boletos")
 }
