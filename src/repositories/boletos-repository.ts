@@ -37,8 +37,8 @@ export async function repositoryExibirBoletosFiltrados(
 
   if (valor_inicial && valor_final) {
     where.valor = {
-        gte: valor_inicial,
-        lte: valor_final
+        gte: Number(valor_inicial),
+        lte: Number(valor_final),
       };
   }
 
