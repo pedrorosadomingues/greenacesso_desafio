@@ -8,3 +8,9 @@ export async function criarBoleto(boleto: Omit<Boleto, "id">) {
 
     return novoBoleto;
 }
+
+export async function repositoryExibirTodosBoletos() {
+    const boletos = await prisma.boleto.findMany();
+
+    return boletos;
+}

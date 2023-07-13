@@ -2,7 +2,7 @@ import fs from "fs";
 import csv from "csv-parser";
 import { PDFDocument } from "pdf-lib";
 import { Boleto } from "@prisma/client";
-import { buscarLotePorNome, criarBoleto } from "@/repositories";
+import { buscarLotePorNome, criarBoleto, repositoryExibirTodosBoletos } from "@/repositories";
 import { gerarObjeto, separarPaginasPDF } from "@/utils";
 
 export function postBoleto(path: string): Promise<any> {
@@ -44,4 +44,6 @@ export async function separarBoleto(path: string): Promise<void> {
   await separarPaginasPDF(pdfPath, outputDir);
 }
 
-
+export async function exibirTodosBoletos(): Promise<any> {
+  return await repositoryExibirTodosBoletos();
+}

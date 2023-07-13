@@ -33,8 +33,12 @@ export async function separarBoletos(req: Request, res: Response) {
 
 export async function exibirBoletos(req: Request, res: Response) {
   try {
-   return await exibirTodosBoletos();
+    const boletos = await exibirTodosBoletos();
+    return res.send(boletos).status(httpStatus.OK);
   } catch (error) {
     console.log(error);
+    return res
+      .send({ message: "Erro ao exibir boletos" })
+      .status(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
