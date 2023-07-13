@@ -1,12 +1,6 @@
 import { prisma } from "@/config";
 import { Boleto, Prisma, PrismaClient } from "@prisma/client";
-
-interface BoletosFiltradosParams {
-  nome?: string;
-  valor_inicial?: number;
-  valor_final?: number;
-  id_lote?: number;
-}
+import { BoletosFiltradosParams } from "@/protocols";
 
 export async function criarBoleto(boleto: Omit<Boleto, "id">) {
   const novoBoleto = await prisma.boleto.create({
@@ -37,9 +31,9 @@ export async function repositoryExibirBoletosFiltrados(
 
   if (valor_inicial && valor_final) {
     where.valor = {
-        gte: Number(valor_inicial),
-        lte: Number(valor_final),
-      };
+      gte: Number(valor_inicial),
+      lte: Number(valor_final),
+    };
   }
 
   if (id_lote) {

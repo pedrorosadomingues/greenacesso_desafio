@@ -17,3 +17,11 @@ export interface MulterFile {
       }
     }
   }
+
+  export interface BoletosFiltradosParams {
+    nome?: string;
+    valor_inicial?: number;
+    valor_final?: number;
+    id_lote?: number;
+  }
+  
