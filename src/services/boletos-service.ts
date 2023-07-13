@@ -2,7 +2,12 @@ import fs from "fs";
 import csv from "csv-parser";
 import { PDFDocument } from "pdf-lib";
 import { Boleto } from "@prisma/client";
-import { buscarLotePorNome, criarBoleto, repositoryExibirTodosBoletos } from "@/repositories";
+import {
+  buscarLotePorNome,
+  criarBoleto,
+  repositoryExibirTodosBoletos,
+  repositoryExibirBoletosFiltrados,
+} from "@/repositories";
 import { gerarObjeto, separarPaginasPDF } from "@/utils";
 
 export function postBoleto(path: string): Promise<any> {
@@ -46,4 +51,15 @@ export async function separarBoleto(path: string): Promise<void> {
 
 export async function exibirTodosBoletos(): Promise<any> {
   return await repositoryExibirTodosBoletos();
+}
+
+export async function exibirBoletosFiltradosSvc(params: any): Promise<any> {
+  const { nome, valor_inicial, valor_final, id_lote } = params;
+  const boletosFiltrados = await repositoryExibirBoletosFiltrados({
+    nome,
+    valor_inicial,
+    valor_final,
+    id_lote,
+  });
+  return boletosFiltrados;
 }
