@@ -1,6 +1,5 @@
 import fs from "fs";
 import csv from "csv-parser";
-import { PDFDocument } from "pdf-lib";
 import { Boleto } from "@prisma/client";
 import {
   buscarLotePorNome,
@@ -9,6 +8,7 @@ import {
   repositoryExibirBoletosFiltrados,
 } from "@/repositories";
 import { gerarObjeto, separarPaginasPDF } from "@/utils";
+import PDFDocument from "pdfkit";
 
 export function postBoleto(path: string): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -53,8 +53,13 @@ export async function exibirTodosBoletos(): Promise<any> {
   return await repositoryExibirTodosBoletos();
 }
 
-export async function exibirBoletosFiltradosSvc(params: any): Promise<any> {
-  const { nome, valor_inicial, valor_final, id_lote } = params;
+export async function exibirBoletosFiltradosouRelatorioSvc(
+  params: any
+): Promise<any> {
+  const { nome, valor_inicial, valor_final, id_lote, relatorioParam } = params;
+
+  if (relatorioParam === "1") return await gerarRelatoriosSvc(relatorioParam);
+
   const boletosFiltrados = await repositoryExibirBoletosFiltrados({
     nome,
     valor_inicial,
@@ -62,4 +67,48 @@ export async function exibirBoletosFiltradosSvc(params: any): Promise<any> {
     id_lote,
   });
   return boletosFiltrados;
+}
+
+export async function gerarRelatoriosSvc(relatorio: any): Promise<any> {
+  const boletos = await repositoryExibirTodosBoletos();
+  if (relatorio === "1") {
+    const doc = new PDFDocument();
+
+    // Cabeçalho da tabela
+    const header = [
+      "id",
+      "nome_sacado",
+      "id_lote",
+      "valor",
+      "linha_digitavel",
+      "ativo",
+      "criado_em",
+    ];
+
+    // Adicionar cabeçalho da tabela ao documento
+    doc.text(header.join(" | "));
+
+    // Adicionar dados da tabela ao documento
+    boletos.forEach((boleto) => {
+      const row = [
+        boleto.id,
+        boleto.nome_sacado,
+        boleto.id_lote,
+        boleto.valor,
+        boleto.linha_digitavel,
+        boleto.ativo,
+        boleto.criado_em.toISOString().split("T")[0],
+        // Adicione mais colunas conforme necessário
+      ];
+      doc.text(row.join(" | "));
+    });
+
+    doc.end();
+
+    const fileName = "./src/relatorios/relatorio.pdf";
+    const base64 = fs.readFileSync(fileName, { encoding: "base64" });
+    console.log("Relatório gerado com sucesso");
+
+    return { base64 };
+  }
 }
