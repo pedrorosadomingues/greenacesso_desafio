@@ -8,8 +8,8 @@ datasource db {
 }
 
 model Lote {
-    id        Int      @id @default(autoincrement())
-    nome      String?   @db.VarChar(100)
+    id        Int       @id @default(autoincrement())
+    nome_lote String?   @db.VarChar(100)
     ativo     Boolean?
     criado_em DateTime? @default(now())
     boletos   Boleto[]
@@ -18,14 +18,14 @@ model Lote {
 }
 
 model Boleto {
-    id              Int     @id @default(autoincrement())
-    nome_sacado     String?  @db.VarChar(255)
-    id_lote         Int     
+    id              Int       @id @default(autoincrement())
+    nome_sacado     String?   @db.VarChar(255)
+    id_lote         Int
     valor           Float?
-    linha_digitavel String?  @db.VarChar(255)
+    linha_digitavel String?   @db.VarChar(255)
     ativo           Boolean?
     criado_em       DateTime? @default(now())
-    lote            Lote    @relation(fields: [id_lote], references: [id])
+    lote            Lote      @relation(fields: [id_lote], references: [id])
 
     @@map("boletos")
 }
