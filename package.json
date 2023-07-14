@@ -11,8 +11,8 @@
     "start": "npm run prisma:migrate:docker && node dist/server.js",
     "dev": "dotenv -e .env.development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
     "test": "npm run prisma:migrate:test && npx dotenv -e .env.test npx jest",
-    "prisma:migrate:dev": "npx dotenv -e .env.development prisma migrate dev && npx dotenv -e .env.development npx prisma db seed",
-    "prisma:migrate:docker": "npx dotenv -e .env prisma migrate dev && npx dotenv -e .env npx prisma db seed",
+    "prisma:migrate:dev": "dotenv -e .env.development prisma migrate dev && npx dotenv -e .env.development npx prisma db seed",
+    "prisma:migrate:docker": "dotenv -e .env prisma migrate dev && npx dotenv -e .env npx prisma db seed",
     "prisma:migrate:test": "dotenv -e .env.test prisma migrate dev && npx dotenv -e .env.test npx prisma db seed"
   },
   "author": "Pedro Rosa Domingues",
