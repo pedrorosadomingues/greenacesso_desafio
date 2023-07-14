@@ -1,4 +1,6 @@
 node_modules
 /uploads
-.env
 /teste
+# .env
+# .env.test
+# .env.development
