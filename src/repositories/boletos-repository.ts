@@ -12,7 +12,6 @@ export async function criarBoleto(boleto: Omit<Boleto, "id">) {
 
 export async function repositoryExibirTodosBoletos() {
   const boletos = await prisma.boleto.findMany();
-
   return boletos;
 }
 

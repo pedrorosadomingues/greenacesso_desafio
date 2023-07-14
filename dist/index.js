@@ -12,9 +12,6 @@ const routes_1 = require("@/routes");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)())
     .use(express_1.default.json())
-    .get("/health", (req, res) => {
-    res.send("Hello World!");
-})
     .use("/boletos", routes_1.boletosRouter);
 function init() {
     (0, config_1.connectDb)();
