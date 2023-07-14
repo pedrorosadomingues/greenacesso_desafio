@@ -34,10 +34,6 @@ export function postBoleto(path: string): Promise<any> {
         console.log("CSV file successfully processed");
         resolve(boletos);
       })
-      .on("error", (error) => {
-        console.log("Error processing CSV file");
-        reject(error);
-      });
   });
 }
 

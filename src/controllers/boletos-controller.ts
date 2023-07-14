@@ -13,8 +13,6 @@ export async function postBoletos(req: Request, res: Response) {
     const boletos = await postBoleto(path);
     return res.send(boletos).status(httpStatus.OK);
   } catch (error) {
-    if (error.name === "ArquivoNaoEncontrado")
-      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     return res.send(error.message).status(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
