@@ -3,8 +3,7 @@ import httpStatus from "http-status";
 import {
   postBoleto,
   separarBoleto,
-  exibirTodosBoletos,
-  exibirBoletosFiltradosouRelatorioSvc,
+  exibirBoletosOuRelatorioSvc,
 } from "@/services";
 
 export async function postBoletos(req: Request, res: Response) {
@@ -31,19 +30,7 @@ export async function separarBoletos(req: Request, res: Response) {
   }
 }
 
-export async function exibirBoletos(req: Request, res: Response) {
-  try {
-    const boletos = await exibirTodosBoletos();
-    return res.send(boletos).status(httpStatus.OK);
-  } catch (error) {
-    console.log(error);
-    return res
-      .send({ message: "Erro ao exibir boletos" })
-      .status(httpStatus.INTERNAL_SERVER_ERROR);
-  }
-}
-
-export async function exibirBoletosFiltradosouRelatorio(
+export async function exibirBoletosOuRelatorio(
   req: Request,
   res: Response
 ) {
@@ -56,7 +43,7 @@ export async function exibirBoletosFiltradosouRelatorio(
   const parsedIdLote = parseInt(id_lote as string, 10);
 
   try {
-    const boletosFiltrados = await exibirBoletosFiltradosouRelatorioSvc({
+    const boletosFiltrados = await exibirBoletosOuRelatorioSvc({
       nome: nome as string,
       valor_inicial: parsedValorInicial,
       valor_final: parsedValorFinal,

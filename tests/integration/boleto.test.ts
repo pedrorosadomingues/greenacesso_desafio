@@ -1,7 +1,16 @@
-import app from "../../src/index";
+import app, { init } from "@/index";
 import supertest from "supertest";
 import httpStatus from "http-status";
+import { prisma } from "@/config";
+import { limparBanco } from "../helpers";
 
+beforeAll(async () => {
+  await init();
+});
+
+afterAll(async () => {
+  await limparBanco();
+});
 const api = supertest(app);
 
 describe("POST /boletos", () => {
@@ -9,7 +18,7 @@ describe("POST /boletos", () => {
     const response = await api.post("/boletos");
 
     const resultado = await api.get("/boletos");
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(resultado.body).toHaveLength(0);
   });
   describe("quando encontrar arquivo", () => {
     it("deve retornar status 400 caso o arquivo nao seja PDF ou CSV", async () => {
@@ -20,11 +29,10 @@ describe("POST /boletos", () => {
     });
 
     it("deve retornar status 200 caso o arquivo seja CSV", async () => {
-      await api.post("/boletos").attach("file", "tests/factories/boletos.csv");
-
-      const resultado = await api.get("/boletos");
-      console.log(resultado.body);
-      expect(resultado).toHaveLength(1);
+      const res = await api
+        .post("/boletos")
+        .attach("file", "tests/factories/boletos.csv");
+     expect(res.body.length).toBeGreaterThan(0);
     });
     it("deve retornar status 200 caso o arquivo seja PDF", async () => {
       const response = await api

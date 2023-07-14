@@ -31,11 +31,9 @@ export function postBoleto(path: string): Promise<any> {
         await criarBoleto(boletoReq);
       })
       .on("end", () => {
-        console.log("CSV file successfully processed");
         resolve(boletos);
       })
       .on("error", (error) => {
-        console.log("Error processing CSV file");
         reject(error);
       });
   });
@@ -48,13 +46,8 @@ export async function separarBoleto(path: string): Promise<void> {
   await separarPaginasPDF(pdfPath, outputDir);
 }
 
-export async function exibirTodosBoletos(): Promise<any> {
-  return await repositoryExibirTodosBoletos();
-}
-
-export async function exibirBoletosFiltradosouRelatorioSvc(
-  params: any
-): Promise<any> {
+export async function exibirBoletosOuRelatorioSvc(params: any): Promise<any> {
+  if (!params) return await repositoryExibirTodosBoletos();
   const { nome, valor_inicial, valor_final, id_lote, relatorioParam } = params;
 
   if (relatorioParam === "1") return await gerarRelatoriosSvc(relatorioParam);
@@ -106,8 +99,6 @@ export async function gerarRelatoriosSvc(relatorio: any): Promise<any> {
 
     const fileName = "./src/relatorios/relatorio.pdf";
     const base64 = fs.readFileSync(fileName, { encoding: "base64" });
-    console.log("Relatório gerado com sucesso");
-
     return { base64 };
   }
 }
