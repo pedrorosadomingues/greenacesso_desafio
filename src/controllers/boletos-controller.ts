@@ -11,13 +11,11 @@ export async function postBoletos(req: Request, res: Response) {
   const { path } = req.file;
   try {
     const boletos = await postBoleto(path);
-    console.log(boletos);
     return res.send(boletos).status(httpStatus.OK);
   } catch (error) {
-    console.log(error);
-    return res
-      .send({ message: "Erro ao processar arquivo" })
-      .status(httpStatus.INTERNAL_SERVER_ERROR);
+    if (error.name === "ArquivoNaoEncontrado")
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    return res.send(error.message).status(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -47,10 +45,12 @@ export async function exibirBoletos(req: Request, res: Response) {
   }
 }
 
-export async function exibirBoletosFiltradosouRelatorio(req: Request, res: Response) {
-  const { nome, valor_inicial, valor_final, id_lote, relatorioParam } = req.query;
-
-  
+export async function exibirBoletosFiltradosouRelatorio(
+  req: Request,
+  res: Response
+) {
+  const { nome, valor_inicial, valor_final, id_lote, relatorioParam } =
+    req.query;
 
   // Validar e tratar os parâmetros
   const parsedValorInicial = parseFloat(valor_inicial as string);

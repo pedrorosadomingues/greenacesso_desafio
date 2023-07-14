@@ -25,3 +25,7 @@ export interface MulterFile {
     id_lote?: number;
   }
   
+  export interface ApplicationError {
+    name: string;
+    message: string;
+  };

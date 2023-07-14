@@ -13,7 +13,6 @@ import PDFDocument from "pdfkit";
 export function postBoleto(path: string): Promise<any> {
   return new Promise((resolve, reject) => {
     const boletos: Boleto[] = [];
-
     fs.createReadStream(path)
       .pipe(csv())
       .on("data", async (data) => {
@@ -36,7 +35,7 @@ export function postBoleto(path: string): Promise<any> {
         resolve(boletos);
       })
       .on("error", (error) => {
-        console.error("Error processing CSV file:", error);
+        console.log("Error processing CSV file");
         reject(error);
       });
   });
