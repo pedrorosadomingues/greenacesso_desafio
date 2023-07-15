@@ -10,24 +10,25 @@ import {
 import { gerarObjeto, separarPaginasPDF } from "@/utils";
 import PDFDocument from "pdfkit";
 
-export function postBoleto(path: string): Promise<any> {
+export function postBoleto(path: any): Promise<any> {
   return new Promise((resolve, reject) => {
     const boletos: Boleto[] = [];
     fs.createReadStream(path)
       .pipe(csv())
-      .on("data", async (data) => {
+      .on("data", async (data: string, index: number) => {
         const boleto = gerarObjeto(data);
 
         boletos.push(boleto);
         const id_lote = await buscarLotePorNome(`00${boleto.unidade}`);
         const boletoReq = {
+          id: index + 1,
           nome_sacado: boleto.nome,
           id_lote,
           valor: +boleto.valor,
           linha_digitavel: boleto.linha_digitavel,
           ativo: true,
           criado_em: new Date(),
-        };
+        } as Boleto;
         await criarBoleto(boletoReq);
       })
       .on("end", () => {
@@ -39,7 +40,7 @@ export function postBoleto(path: string): Promise<any> {
   });
 }
 
-export async function separarBoleto(path: string): Promise<void> {
+export async function separarBoleto(path: any): Promise<void> {
   const pdfPath = path;
   const outputDir = "./src/boletos_separados";
 

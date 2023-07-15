@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.gerarRelatoriosSvc = exports.exibirBoletosFiltradosouRelatorioSvc = exports.exibirTodosBoletos = exports.separarBoleto = exports.postBoleto = void 0;
+exports.gerarRelatoriosSvc = exports.exibirBoletosOuRelatorioSvc = exports.separarBoleto = exports.postBoleto = void 0;
 const fs_1 = __importDefault(require("fs"));
 const csv_parser_1 = __importDefault(require("csv-parser"));
 const repositories_1 = require("../repositories");
@@ -14,11 +14,12 @@ function postBoleto(path) {
         const boletos = [];
         fs_1.default.createReadStream(path)
             .pipe((0, csv_parser_1.default)())
-            .on("data", async (data) => {
+            .on("data", async (data, index) => {
             const boleto = (0, utils_1.gerarObjeto)(data);
             boletos.push(boleto);
             const id_lote = await (0, repositories_1.buscarLotePorNome)(`00${boleto.unidade}`);
             const boletoReq = {
+                id: index + 1,
                 nome_sacado: boleto.nome,
                 id_lote,
                 valor: +boleto.valor,
@@ -29,11 +30,9 @@ function postBoleto(path) {
             await (0, repositories_1.criarBoleto)(boletoReq);
         })
             .on("end", () => {
-            console.log("CSV file successfully processed");
             resolve(boletos);
         })
             .on("error", (error) => {
-            console.log("Error processing CSV file");
             reject(error);
         });
     });
@@ -45,11 +44,9 @@ async function separarBoleto(path) {
     await (0, utils_1.separarPaginasPDF)(pdfPath, outputDir);
 }
 exports.separarBoleto = separarBoleto;
-async function exibirTodosBoletos() {
-    return await (0, repositories_1.repositoryExibirTodosBoletos)();
-}
-exports.exibirTodosBoletos = exibirTodosBoletos;
-async function exibirBoletosFiltradosouRelatorioSvc(params) {
+async function exibirBoletosOuRelatorioSvc(params) {
+    if (!params)
+        return await (0, repositories_1.repositoryExibirTodosBoletos)();
     const { nome, valor_inicial, valor_final, id_lote, relatorioParam } = params;
     if (relatorioParam === "1")
         return await gerarRelatoriosSvc(relatorioParam);
@@ -61,7 +58,7 @@ async function exibirBoletosFiltradosouRelatorioSvc(params) {
     });
     return boletosFiltrados;
 }
-exports.exibirBoletosFiltradosouRelatorioSvc = exibirBoletosFiltradosouRelatorioSvc;
+exports.exibirBoletosOuRelatorioSvc = exibirBoletosOuRelatorioSvc;
 async function gerarRelatoriosSvc(relatorio) {
     const boletos = await (0, repositories_1.repositoryExibirTodosBoletos)();
     if (relatorio === "1") {
@@ -95,7 +92,6 @@ async function gerarRelatoriosSvc(relatorio) {
         doc.end();
         const fileName = "./src/relatorios/relatorio.pdf";
         const base64 = fs_1.default.readFileSync(fileName, { encoding: "base64" });
-        console.log("Relatório gerado com sucesso");
         return { base64 };
     }
 }

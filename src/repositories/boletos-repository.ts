@@ -2,7 +2,7 @@ import { prisma } from "@/config";
 import { Boleto, Prisma, PrismaClient } from "@prisma/client";
 import { BoletosFiltradosParams } from "@/protocols";
 
-export async function criarBoleto(boleto: Omit<Boleto, "id">) {
+export async function criarBoleto(boleto: Boleto) {
   const novoBoleto = await prisma.boleto.create({
     data: boleto,
   });

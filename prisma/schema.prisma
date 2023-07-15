@@ -18,7 +18,7 @@ model Lote {
 }
 
 model Boleto {
-    id              Int       @id @default(autoincrement())
+    id              Int       @id 
     nome_sacado     String?   @db.VarChar(255)
     id_lote         Int
     valor           Float?

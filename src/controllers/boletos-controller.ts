@@ -20,7 +20,6 @@ export async function separarBoletos(req: Request, res: Response) {
   const { path } = req.file;
   try {
     const boletos = await separarBoleto(path);
-    console.log(boletos);
     return res.send(boletos).status(httpStatus.OK);
   } catch (error) {
     console.log(error);
